@@ -5,7 +5,6 @@ config()
 export const SETTINGS = {
     PORT: process.env.PORT || 3001,
     PATH: {
-        videos: '/videos',
-        id: '/videos/id'
+        videos: '/videos'
     },
 }
