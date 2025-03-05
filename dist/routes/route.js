@@ -124,3 +124,7 @@ exports.videosRoutes.delete('/:id', (req, res) => {
     }
     res.sendStatus(404);
 });
+exports.videosRoutes.delete('/', (req, res) => {
+    db_1.db.videos = [];
+    res.sendStatus(204);
+});

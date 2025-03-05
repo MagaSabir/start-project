@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import {db, errors, arr} from "../db/db";
+import any = jasmine.any;
 
 export const videosRoutes = Router()
 
@@ -133,3 +134,8 @@ videosRoutes.delete('/:id', (req:Request, res:Response) => {
     res.sendStatus(404)
 })
 
+videosRoutes.delete('/', (req:Request, res:Response) => {
+    db.videos = [] as any
+
+    res.sendStatus(204)
+})
