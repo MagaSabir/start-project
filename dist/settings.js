@@ -6,6 +6,6 @@ const dotenv_1 = require("dotenv");
 exports.SETTINGS = {
     PORT: process.env.PORT || 3001,
     PATH: {
-        videos: '/videos',
+        videos: '/videos'
     },
 };

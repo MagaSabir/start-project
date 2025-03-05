@@ -1,7 +1,10 @@
-import exrpess from 'express';
+import exrpess, {Request, Response} from 'express';
+import {SETTINGS} from "./settings";
+import {videosRoutes} from "./routes/route";
+
+
 export const app = exrpess();
 app.use(exrpess.json())
+app.use(SETTINGS.PATH.videos, videosRoutes)
 
-app.get('/', (req, res) => {
-    res.status(200).json({version: '1.0'})
-})
+
