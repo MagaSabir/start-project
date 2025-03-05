@@ -5,15 +5,14 @@ export const videosRoutes = Router()
 
 
 videosRoutes.get('/', (req: Request, res: Response) => {
-    res.send(db.videos)
-
+    res.status(200).json(db.videos)
 })
 
 videosRoutes.get('/:id', (req: Request, res: Response) => {
     const videoId = parseInt(req.params.id);
     let videos  = db.videos.find(v => v.id === videoId)
     if(videos) {
-        res.send(videos)
+        res.status(200).json(videos)
     } else {
         res.sendStatus(404)
     }
@@ -31,10 +30,24 @@ videosRoutes.post('/', (req: Request, res: Response) => {
         errors.errorsMessages[0].field = 'author'
         res.send(errors)
     }
-    if(req.body.minAgeRestriction > 1 || req.body.minAgeRestriction.length < 18)
+    if(req.body.minAgeRestriction < 1) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'minAgeRestriction'
+        res.send(errors)
+    }
+    if(req.body.minAgeRestriction > 19) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'minAgeRestriction'
+        res.send(errors)
+    }
     if(typeof req.body.canBeDownloaded !== "boolean" ) {
-        errors.errorsMessages[0].message = 'title'
+        errors.errorsMessages[0].message = 'error'
         errors.errorsMessages[0].field = 'canBeDownloaded'
+        res.send(errors)
+    }
+    if(!Array.isArray(req.body.availableResolutions)){
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'availableResolutions'
         res.send(errors)
     }
 
@@ -60,9 +73,41 @@ videosRoutes.post('/', (req: Request, res: Response) => {
 
 videosRoutes.put('/:id', ( req:Request,res:Response)=> {
     const id = parseInt(req.params.id);
-    console.log(req)
     const videoIndex = db.videos.findIndex(v => v.id === id)
     const video = db.videos[videoIndex]
+    if(video.title.length > 41) {
+            errors.errorsMessages[0].message = 'error'
+            errors.errorsMessages[0].field = 'title'
+            res.send(errors)
+    }
+    if(video.author.length > 21) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'author'
+        res.send(errors)
+    }
+
+    if (!req.body.availableResolutions.every((res: any) => arr.includes(res)) || !req.body.availableResolutions.length) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'availableResolutions'
+        res.send(errors);
+    }
+    if(typeof req.body.canBeDownloaded !== "boolean" ) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'canBeDownloaded'
+        res.send(errors)
+    }
+
+    if(req.body.minAgeRestriction < 1) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'minAgeRestriction'
+        res.send(errors)
+    }
+    if(req.body.minAgeRestriction > 19) {
+        errors.errorsMessages[0].message = 'error'
+        errors.errorsMessages[0].field = 'minAgeRestriction'
+        res.send(errors)
+    }
+
     if(videoIndex === -1) {
         res.sendStatus(404)
     }
