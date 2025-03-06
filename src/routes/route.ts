@@ -5,14 +5,14 @@ export const videosRoutes = Router()
 
 
 videosRoutes.get('/', (req: Request, res: Response) => {
-    res.status(200).json(db.videos)
+    res.status(200).send(db.videos)
 })
 
 videosRoutes.get('/:id', (req: Request, res: Response) => {
     const videoId = parseInt(req.params.id);
     let video  = db.videos.find(v => v.id === videoId)
     if(video) {
-        res.status(200).json(video)
+        res.status(200).send(video)
     } else {
         res.sendStatus(404)
     }
@@ -104,14 +104,14 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
     }
 
     const video = db.videos[videoIndex]
-    if(req.body.title.length > 41) {
+    if(!req.body.title || typeof req.body.title !== "string" || req.body.title.trim().length > 40 || req.body.title.trim().length < 1) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'title'
         })
     }
 
-    if(video.author.length > 21) {
+    if(!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'author'
@@ -142,10 +142,13 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
     //     errors.errorsMessages[0].field = 'minAgeRestriction'
     //     res.send(errors)
     // }
-
-    if(videoIndex === -1) {
-        res.sendStatus(404)
+    if(errors.errorsMessages.length){
+        console.log('Validation errors:', errors);
+        res.status(400).send(errors)
+        return
     }
+
+
     else {
         video.title = req.body.title;
         video.author = req.body.author;
@@ -171,8 +174,4 @@ videosRoutes.delete('/:id', (req:Request, res:Response) => {
 
 })
 
-videosRoutes.delete('/', (req:Request, res:Response) => {
-    db.videos = [] as any
 
-    res.sendStatus(204)
-})

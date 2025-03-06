@@ -24,7 +24,7 @@ export const db: DBType = {
     }]}
 
 
- export type errorsMessageTypes = {
+  type errorsMessageTypes = {
     errorsMessages: {
         message: string,
         field: string
