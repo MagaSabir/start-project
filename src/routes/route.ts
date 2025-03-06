@@ -1,6 +1,5 @@
 import {Request, Response, Router} from "express";
 import {db, errors, arr} from "../db/db";
-import any = jasmine.any;
 
 export const videosRoutes = Router()
 
@@ -11,103 +10,130 @@ videosRoutes.get('/', (req: Request, res: Response) => {
 
 videosRoutes.get('/:id', (req: Request, res: Response) => {
     const videoId = parseInt(req.params.id);
-    let videos  = db.videos.find(v => v.id === videoId)
-    if(videos) {
-        res.status(200).json(videos)
+    let video  = db.videos.find(v => v.id === videoId)
+    if(video) {
+        res.status(200).json(video)
     } else {
         res.sendStatus(404)
     }
 })
 
 videosRoutes.post('/', (req: Request, res: Response) => {
+//.trim()
+    if(!req.body.title || typeof req.body.title !== "string" ||req.body.title.length > 40 || req.body.title.length < 1) {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'title'
+        })
 
-    if(req.body.title.length > 40 || req.body.title.length < 1 || typeof req.body.title !== "string") {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'title'
-        res.send(errors)
+        // errors.errorsMessages[0].message = 'error'
+        // errors.errorsMessages[0].field = 'title'
+        // res.send(errors)
     }
-    if(req.body.author.length > 20 || req.body.author.length < 1 || typeof req.body.title !== "string") {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'author'
-        res.send(errors)
+    if(!req.body.title || typeof req.body.title !== "string" || req.body.author.length > 20 || req.body.author.length < 1 ) {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'author'
+        })
     }
-    if(req.body.minAgeRestriction < 1) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'minAgeRestriction'
-        res.send(errors)
-    }
-    if(req.body.minAgeRestriction > 19) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'minAgeRestriction'
-        res.send(errors)
-    }
-    if(typeof req.body.canBeDownloaded !== "boolean" ) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'canBeDownloaded'
-        res.send(errors)
-    }
+    // if(req.body.minAgeRestriction < 1) {
+    //     errors.errorsMessages[0].message = 'error'
+    //     errors.errorsMessages[0].field = 'minAgeRestriction'
+    //     res.send(errors)
+    // }
+    // if(req.body.minAgeRestriction > 19) {
+    //     errors.errorsMessages[0].message = 'error'
+    //     errors.errorsMessages[0].field = 'minAgeRestriction'
+    //     res.send(errors)
+    // }
+    // if(typeof req.body.canBeDownloaded !== "boolean" ) {
+    //     errors.errorsMessages[0].message = 'error'
+    //     errors.errorsMessages[0].field = 'canBeDownloaded'
+    //     res.send(errors)
+    // }
     if(!Array.isArray(req.body.availableResolutions)){
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'availableResolutions'
-        res.send(errors)
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'availableResolutions'
+        })
+       // res.send(errors)
     }
 
     if (!req.body.availableResolutions.every((res: any) => arr.includes(res)) || !req.body.availableResolutions.length) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'availableResolutions'
-        res.status(400).send(errors);
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'availableResolutions'
+        })
+        //res.status(400).send(errors);
     }
-    else {
+
+    if(errors.errorsMessages.length){
+        res.status(400).send(errors)
+        return
+    }
+
         const newVideo  = {
             id: db.videos ? db.videos[db.videos.length - 1].id + 1: 1,
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
-            minAgeRestriction: req.body.minAgeRestriction,
+            minAgeRestriction: null,
             createdAt: new Date().toISOString(),
             publicationDate: new Date().toISOString(),
             availableResolutions: req.body.availableResolutions
         }
         db.videos.push(newVideo)
         res.status(201).send(newVideo);
-    }});
+    });
 
 videosRoutes.put('/:id', ( req:Request,res:Response)=> {
     const id = parseInt(req.params.id);
     const videoIndex = db.videos.findIndex(v => v.id === id)
-    const video = db.videos[videoIndex]
-    if(video.title.length > 41) {
-            errors.errorsMessages[0].message = 'error'
-            errors.errorsMessages[0].field = 'title'
-            res.send(errors)
+
+    if(videoIndex === -1) {
+        res.sendStatus(404)
+        return
     }
+
+    const video = db.videos[videoIndex]
+    if(req.body.title.length > 41) {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'title'
+        })
+    }
+
     if(video.author.length > 21) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'author'
-        res.send(errors)
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'author'
+        })
     }
 
     if (!req.body.availableResolutions.every((res: any) => arr.includes(res)) || !req.body.availableResolutions.length) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'availableResolutions'
-        res.send(errors);
-    }
-    if(typeof req.body.canBeDownloaded !== "boolean" ) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'canBeDownloaded'
-        res.send(errors)
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'availableResolutions'
+        })
     }
 
-    if(req.body.minAgeRestriction < 1) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'minAgeRestriction'
-        res.send(errors)
+    if(typeof req.body.canBeDownloaded !== "boolean" ) {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'canBeDownloaded'
+        })
     }
-    if(req.body.minAgeRestriction > 19) {
-        errors.errorsMessages[0].message = 'error'
-        errors.errorsMessages[0].field = 'minAgeRestriction'
-        res.send(errors)
-    }
+
+    // if(req.body.minAgeRestriction < 1) {
+    //     errors.errorsMessages[0].message = 'error'
+    //     errors.errorsMessages[0].field = 'minAgeRestriction'
+    //     res.send(errors)
+    // }
+    // if(req.body.minAgeRestriction > 19) {
+    //     errors.errorsMessages[0].message = 'error'
+    //     errors.errorsMessages[0].field = 'minAgeRestriction'
+    //     res.send(errors)
+    // }
 
     if(videoIndex === -1) {
         res.sendStatus(404)
@@ -120,18 +146,21 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
         video.minAgeRestriction = req.body.minAgeRestriction;
         video.publicationDate = req.body.publicationDate
     }
-    res.send(video)
+    res.sendStatus(204)
 })
 
 videosRoutes.delete('/:id', (req:Request, res:Response) => {
-    for(let i = 0; i < db.videos.length; i++) {
-        if(db.videos[i].id === +req.params.id) {
-            db.videos.splice(i, 1)
-            res.sendStatus(204)
-        }
+    const id = parseInt(req.params.id);
+    const videoIndex = db.videos.findIndex(v => v.id === id)
+
+    if(videoIndex === -1) {
+        res.sendStatus(404)
+        return
     }
 
-    res.sendStatus(404)
+    db.videos.splice(videoIndex, 1)
+    res.sendStatus(204)
+
 })
 
 videosRoutes.delete('/', (req:Request, res:Response) => {
