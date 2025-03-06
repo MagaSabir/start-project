@@ -71,7 +71,7 @@ exports.videosRoutes.post('/', (req, res) => {
         return;
     }
     const newVideo = {
-        id: new Date(),
+        id: +new Date(),
         title: req.body.title,
         author: req.body.author,
         canBeDownloaded: false,

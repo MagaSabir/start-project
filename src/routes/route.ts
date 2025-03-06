@@ -76,8 +76,8 @@ videosRoutes.post('/', (req: Request, res: Response) => {
         return
     }
 
-        const newVideo: any  = {
-            id: new Date(),
+        const newVideo  = {
+            id: +new Date(),
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
