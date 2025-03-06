@@ -18,19 +18,20 @@ exports.videosRoutes.get('/:id', (req, res) => {
     }
 });
 exports.videosRoutes.post('/', (req, res) => {
-    //.trim()
-    if (!req.body.title || typeof req.body.title.trim() !== "string" || req.body.title.length > 40 || req.body.title.length < 1) {
-        db_1.errors.errorsMessages.push({
+    const errors = {
+        errorsMessages: []
+    };
+    if (!req.body.title || typeof req.body.title !== "string" || req.body.title.trim().length > 40 || req.body.title.trim().length < 1) {
+        errors.errorsMessages.push({
             message: 'error',
             field: 'title'
         });
-        console.log((req.body.title));
         // errors.errorsMessages[0].message = 'error'
         // errors.errorsMessages[0].field = 'title'
         // res.send(errors)
     }
-    if (!req.body.author || typeof req.body.author !== "string" || req.body.author.length > 20 || req.body.author.length < 1) {
-        db_1.errors.errorsMessages.push({
+    if (!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
+        errors.errorsMessages.push({
             message: 'error',
             field: 'author'
         });
@@ -51,21 +52,22 @@ exports.videosRoutes.post('/', (req, res) => {
     //     res.send(errors)
     // }
     if (!Array.isArray(req.body.availableResolutions)) {
-        db_1.errors.errorsMessages.push({
+        errors.errorsMessages.push({
             message: 'error',
             field: 'availableResolutions'
         });
         // res.send(errors)
     }
     if (!req.body.availableResolutions.every((res) => db_1.arr.includes(res)) || !req.body.availableResolutions.length) {
-        db_1.errors.errorsMessages.push({
+        errors.errorsMessages.push({
             message: 'error',
             field: 'availableResolutions'
         });
         //res.status(400).send(errors);
     }
-    if (db_1.errors.errorsMessages.length) {
-        res.status(400).send(db_1.errors);
+    if (errors.errorsMessages.length) {
+        console.log('Validation errors:', errors);
+        res.status(400).send(errors);
         return;
     }
     const newVideo = {
@@ -78,11 +80,14 @@ exports.videosRoutes.post('/', (req, res) => {
         publicationDate: new Date().toISOString(),
         availableResolutions: req.body.availableResolutions
     };
-    console.log((newVideo));
     db_1.db.videos.push(newVideo);
     res.status(201).send(newVideo);
+    console.log(req.body.title);
 });
 exports.videosRoutes.put('/:id', (req, res) => {
+    const errors = {
+        errorsMessages: []
+    };
     const id = parseInt(req.params.id);
     const videoIndex = db_1.db.videos.findIndex(v => v.id === id);
     if (videoIndex === -1) {
@@ -91,25 +96,25 @@ exports.videosRoutes.put('/:id', (req, res) => {
     }
     const video = db_1.db.videos[videoIndex];
     if (req.body.title.length > 41) {
-        db_1.errors.errorsMessages.push({
+        errors.errorsMessages.push({
             message: 'error',
             field: 'title'
         });
     }
     if (video.author.length > 21) {
-        db_1.errors.errorsMessages.push({
+        errors.errorsMessages.push({
             message: 'error',
             field: 'author'
         });
     }
     if (!req.body.availableResolutions.every((res) => db_1.arr.includes(res)) || !req.body.availableResolutions.length) {
-        db_1.errors.errorsMessages.push({
+        errors.errorsMessages.push({
             message: 'error',
             field: 'availableResolutions'
         });
     }
     if (typeof req.body.canBeDownloaded !== "boolean") {
-        db_1.errors.errorsMessages.push({
+        errors.errorsMessages.push({
             message: 'error',
             field: 'canBeDownloaded'
         });

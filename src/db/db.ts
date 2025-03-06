@@ -24,7 +24,7 @@ export const db: DBType = {
     }]}
 
 
- type errorsMessageTypes = {
+ export type errorsMessageTypes = {
     errorsMessages: {
         message: string,
         field: string
@@ -32,14 +32,7 @@ export const db: DBType = {
  }
 
 
- export const errors: errorsMessageTypes = {
-     errorsMessages: [
-         // {
-         //     // message: "string",
-         //     // field: "string"
-         // }
-     ]
- }
+
 
 
 

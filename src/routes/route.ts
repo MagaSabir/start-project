@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {db, errors, arr} from "../db/db";
+import {db, arr} from "../db/db";
 
 export const videosRoutes = Router()
 
@@ -19,18 +19,20 @@ videosRoutes.get('/:id', (req: Request, res: Response) => {
 })
 
 videosRoutes.post('/', (req: Request, res: Response) => {
-//.trim()
-    if(!req.body.title || typeof req.body.title.trim() !== "string" ||req.body.title.length > 40 || req.body.title.length < 1) {
+     const errors: any = {
+        errorsMessages: []
+    }
+    if(!req.body.title || typeof req.body.title !== "string" || req.body.title.trim().length > 40 || req.body.title.trim().length < 1) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'title'
         })
-console.log((req.body.title))
+
         // errors.errorsMessages[0].message = 'error'
         // errors.errorsMessages[0].field = 'title'
         // res.send(errors)
     }
-    if(!req.body.author || typeof req.body.author !== "string" || req.body.author.length > 20 || req.body.author.length < 1 ) {
+    if(!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1 ) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'author'
@@ -68,6 +70,7 @@ console.log((req.body.title))
     }
 
     if(errors.errorsMessages.length){
+        console.log('Validation errors:', errors);
         res.status(400).send(errors)
         return
     }
@@ -82,12 +85,16 @@ console.log((req.body.title))
             publicationDate: new Date().toISOString(),
             availableResolutions: req.body.availableResolutions
         }
-    console.log((newVideo))
+
         db.videos.push(newVideo)
         res.status(201).send(newVideo);
+    console.log(req.body.title)
     });
 
 videosRoutes.put('/:id', ( req:Request,res:Response)=> {
+     const errors: any = {
+        errorsMessages: []
+    }
     const id = parseInt(req.params.id);
     const videoIndex = db.videos.findIndex(v => v.id === id)
 
