@@ -24,13 +24,20 @@ export const db: DBType = {
     }]}
 
 
+ type errorsMessageTypes = {
+    errorsMessages: {
+        message: string,
+        field: string
+    }[]
+ }
 
- export const errors = {
+
+ export const errors: errorsMessageTypes = {
      errorsMessages: [
-         {
-             message: "string",
-             field: "string"
-         }
+         // {
+         //     // message: "string",
+         //     // field: "string"
+         // }
      ]
  }
 

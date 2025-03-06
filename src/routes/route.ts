@@ -20,17 +20,17 @@ videosRoutes.get('/:id', (req: Request, res: Response) => {
 
 videosRoutes.post('/', (req: Request, res: Response) => {
 //.trim()
-    if(!req.body.title || typeof req.body.title !== "string" ||req.body.title.length > 40 || req.body.title.length < 1) {
+    if(!req.body.title || typeof req.body.title.trim() !== "string" ||req.body.title.length > 40 || req.body.title.length < 1) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'title'
         })
-
+console.log((req.body.title))
         // errors.errorsMessages[0].message = 'error'
         // errors.errorsMessages[0].field = 'title'
         // res.send(errors)
     }
-    if(!req.body.title || typeof req.body.title !== "string" || req.body.author.length > 20 || req.body.author.length < 1 ) {
+    if(!req.body.author || typeof req.body.author !== "string" || req.body.author.length > 20 || req.body.author.length < 1 ) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'author'
@@ -82,6 +82,7 @@ videosRoutes.post('/', (req: Request, res: Response) => {
             publicationDate: new Date().toISOString(),
             availableResolutions: req.body.availableResolutions
         }
+    console.log((newVideo))
         db.videos.push(newVideo)
         res.status(201).send(newVideo);
     });
