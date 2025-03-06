@@ -16,6 +16,7 @@ videosRoutes.get('/:id', (req: Request, res: Response) => {
     } else {
         res.sendStatus(404)
     }
+
 })
 
 videosRoutes.post('/', (req: Request, res: Response) => {
@@ -75,8 +76,8 @@ videosRoutes.post('/', (req: Request, res: Response) => {
         return
     }
 
-        const newVideo  = {
-            id: db.videos ? db.videos[db.videos.length - 1].id + 1: 1,
+        const newVideo: any  = {
+            id: new Date(),
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
@@ -85,10 +86,11 @@ videosRoutes.post('/', (req: Request, res: Response) => {
             publicationDate: new Date().toISOString(),
             availableResolutions: req.body.availableResolutions
         }
+    console.log((req.body))
+    console.log((newVideo))
 
         db.videos.push(newVideo)
         res.status(201).send(newVideo);
-    console.log(req.body.title)
     });
 
 videosRoutes.put('/:id', ( req:Request,res:Response)=> {
@@ -158,6 +160,8 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
         video.publicationDate = req.body.publicationDate
     }
     res.sendStatus(204)
+    return
+
 })
 
 videosRoutes.delete('/:id', (req:Request, res:Response) => {
@@ -174,4 +178,8 @@ videosRoutes.delete('/:id', (req:Request, res:Response) => {
 
 })
 
-
+videosRoutes.delete('/', (req:Request, res:Response) => {
+    db.videos = [] as any
+    res.sendStatus(204)
+    return
+})

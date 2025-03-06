@@ -13,7 +13,7 @@
 
 export const db: DBType = {
     videos : [{
-        id: 0,
+        id: 1,
         title: "string",
         author: "string",
         canBeDownloaded: true,

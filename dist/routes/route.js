@@ -71,7 +71,7 @@ exports.videosRoutes.post('/', (req, res) => {
         return;
     }
     const newVideo = {
-        id: db_1.db.videos ? db_1.db.videos[db_1.db.videos.length - 1].id + 1 : 1,
+        id: new Date(),
         title: req.body.title,
         author: req.body.author,
         canBeDownloaded: false,
@@ -80,9 +80,10 @@ exports.videosRoutes.post('/', (req, res) => {
         publicationDate: new Date().toISOString(),
         availableResolutions: req.body.availableResolutions
     };
+    console.log((req.body));
+    console.log((newVideo));
     db_1.db.videos.push(newVideo);
     res.status(201).send(newVideo);
-    console.log(req.body.title);
 });
 exports.videosRoutes.put('/:id', (req, res) => {
     const errors = {
@@ -143,6 +144,7 @@ exports.videosRoutes.put('/:id', (req, res) => {
         video.publicationDate = req.body.publicationDate;
     }
     res.sendStatus(204);
+    return;
 });
 exports.videosRoutes.delete('/:id', (req, res) => {
     const id = parseInt(req.params.id);
@@ -153,4 +155,9 @@ exports.videosRoutes.delete('/:id', (req, res) => {
     }
     db_1.db.videos.splice(videoIndex, 1);
     res.sendStatus(204);
+});
+exports.videosRoutes.delete('/', (req, res) => {
+    db_1.db.videos = [];
+    res.sendStatus(204);
+    return;
 });
