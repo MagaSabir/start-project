@@ -84,7 +84,6 @@ const date = new Date()
             availableResolutions: req.body.availableResolutions
         }
 
-
         db.videos.push(newVideo)
         res.status(201).send(newVideo);
     });
@@ -133,7 +132,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
         })
 
     }
-// || req.body.minAgeRestriction < 1
+
     if(!req.body.minAgeRestriction || req.body.minAgeRestriction > 19 ) {
         errors.errorsMessages.push({
             message: 'error',
