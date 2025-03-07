@@ -80,7 +80,7 @@ const date = new Date()
             canBeDownloaded: false,
             minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date(date.setDate(date.getDate() + 1).toString()),
+            publicationDate: new Date(date.setDate(date.getDate() + 1)),
             availableResolutions: req.body.availableResolutions
         }
 
