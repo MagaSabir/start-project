@@ -73,7 +73,7 @@ exports.videosRoutes.post('/', (req, res) => {
         canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date().toISOString(),
-        publicationDate: new Date(date.setDate(date.getDate() + 1)),
+        publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
         availableResolutions: req.body.availableResolutions
     };
     db_1.db.videos.push(newVideo);
