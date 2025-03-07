@@ -92,6 +92,12 @@ exports.videosRoutes.put('/:id', (req, res) => {
             field: 'author'
         });
     }
+    if (req.body.publicationDate && typeof req.body.publicationDate !== "string") {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'publicationDate'
+        });
+    }
     if (!req.body.availableResolutions.every((res) => db_1.arr.includes(res)) || !req.body.availableResolutions.length) {
         errors.errorsMessages.push({
             message: 'error',

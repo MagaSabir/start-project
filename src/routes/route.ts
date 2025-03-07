@@ -106,8 +106,13 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'author'
         })
-
     }
+
+    if(req.body.publicationDate && typeof req.body.publicationDate !== "string") {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'publicationDate'
+        })}
 
     if (!req.body.availableResolutions.every((res: any) => arr.includes(res)) || !req.body.availableResolutions.length) {
         errors.errorsMessages.push({
