@@ -28,7 +28,6 @@ videosRoutes.post('/', (req: Request, res: Response) => {
             message: 'error',
             field: 'title'
         })
-        return;
     }
 
 

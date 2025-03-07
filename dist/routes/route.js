@@ -26,7 +26,6 @@ exports.videosRoutes.post('/', (req, res) => {
             message: 'error',
             field: 'title'
         });
-        return;
     }
     if (!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
         errors.errorsMessages.push({
