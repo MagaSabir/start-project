@@ -39,7 +39,7 @@ videosRoutes.post('/', (req: Request, res: Response) => {
         })
     }
 
-    if(!req.body.publicationDate || typeof req.body.publicationDate !== "string") {
+    if(typeof req.body.publicationDate !== "string") {
         errors.errorsMessages.push({
             message: 'error',
             field: 'publicationDate'

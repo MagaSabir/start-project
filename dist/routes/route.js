@@ -34,7 +34,7 @@ exports.videosRoutes.post('/', (req, res) => {
             field: 'author'
         });
     }
-    if (!req.body.publicationDate || typeof req.body.publicationDate !== "string") {
+    if (typeof req.body.publicationDate !== "string") {
         errors.errorsMessages.push({
             message: 'error',
             field: 'publicationDate'
