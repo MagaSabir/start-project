@@ -70,6 +70,7 @@ exports.videosRoutes.post('/', (req, res) => {
         res.status(400).send(errors);
         return;
     }
+    const date = new Date();
     const newVideo = {
         id: +new Date(),
         title: req.body.title,
@@ -77,11 +78,9 @@ exports.videosRoutes.post('/', (req, res) => {
         canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date().toISOString(),
-        publicationDate: new Date().toISOString(),
+        publicationDate: new Date(date.setDate(date.getDate() + 1)),
         availableResolutions: req.body.availableResolutions
     };
-    console.log((req.body));
-    console.log((newVideo));
     db_1.db.videos.push(newVideo);
     res.status(201).send(newVideo);
 });

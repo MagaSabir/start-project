@@ -75,19 +75,18 @@ videosRoutes.post('/', (req: Request, res: Response) => {
         res.status(400).send(errors)
         return
     }
-
-        const newVideo  = {
+const date = new Date()
+        const newVideo: any  = {
             id: +new Date(),
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
             minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(date.setDate(date.getDate() + 1)),
             availableResolutions: req.body.availableResolutions
         }
-    console.log((req.body))
-    console.log((newVideo))
+
 
         db.videos.push(newVideo)
         res.status(201).send(newVideo);
