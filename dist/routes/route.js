@@ -67,7 +67,7 @@ exports.videosRoutes.post('/', (req, res) => {
     }
     const date = new Date();
     const newVideo = {
-        id: Date.now() + Math.random(),
+        id: Math.floor(Date.now() + Math.random()),
         title: req.body.title,
         author: req.body.author,
         canBeDownloaded: false,
@@ -87,7 +87,6 @@ exports.videosRoutes.put('/:id', (req, res) => {
     const videoIndex = db_1.db.videos.findIndex(v => v.id === id);
     if (videoIndex === -1) {
         res.sendStatus(404);
-        return;
     }
     const video = db_1.db.videos[videoIndex];
     if (!req.body.title || typeof req.body.title !== "string" || req.body.title.trim().length > 40 || req.body.title.trim().length < 1) {
@@ -95,28 +94,24 @@ exports.videosRoutes.put('/:id', (req, res) => {
             message: 'error',
             field: 'title'
         });
-        return;
     }
     if (!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'author'
         });
-        return;
     }
     if (!req.body.availableResolutions.every((res) => db_1.arr.includes(res)) || !req.body.availableResolutions.length) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'availableResolutions'
         });
-        return;
     }
     if (typeof req.body.canBeDownloaded !== "boolean") {
         errors.errorsMessages.push({
             message: 'error',
             field: 'canBeDownloaded'
         });
-        return;
     }
     // || req.body.minAgeRestriction < 1
     if (!req.body.minAgeRestriction || req.body.minAgeRestriction > 19) {
@@ -124,7 +119,6 @@ exports.videosRoutes.put('/:id', (req, res) => {
             message: 'error',
             field: 'minAgeRestriction'
         });
-        return;
     }
     if (errors.errorsMessages.length) {
         console.log('Validation errors:', errors);

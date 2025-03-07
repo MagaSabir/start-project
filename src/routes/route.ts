@@ -74,7 +74,7 @@ videosRoutes.post('/', (req: Request, res: Response) => {
     }
 const date = new Date()
         const newVideo: any  = {
-            id: Date.now() + Math.random(),
+            id: Math.floor(Date.now() + Math.random()),
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
@@ -98,7 +98,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
 
     if(videoIndex === -1) {
         res.sendStatus(404)
-        return
+
     }
 
     const video = db.videos[videoIndex]
@@ -107,7 +107,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'title'
         })
-        return;
+
     }
 
     if(!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
@@ -115,7 +115,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'author'
         })
-        return;
+
     }
 
     if (!req.body.availableResolutions.every((res: any) => arr.includes(res)) || !req.body.availableResolutions.length) {
@@ -123,7 +123,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'availableResolutions'
         })
-        return;
+
     }
 
     if(typeof req.body.canBeDownloaded !== "boolean" ) {
@@ -131,7 +131,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'canBeDownloaded'
         })
-        return;
+
     }
 // || req.body.minAgeRestriction < 1
     if(!req.body.minAgeRestriction || req.body.minAgeRestriction > 19 ) {
@@ -139,7 +139,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'minAgeRestriction'
         })
-        return;
+
     }
 
     if(errors.errorsMessages.length){
