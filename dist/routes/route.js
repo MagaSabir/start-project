@@ -113,7 +113,6 @@ exports.videosRoutes.put('/:id', (req, res) => {
             field: 'canBeDownloaded'
         });
     }
-    // || req.body.minAgeRestriction < 1
     if (!req.body.minAgeRestriction || req.body.minAgeRestriction > 19) {
         errors.errorsMessages.push({
             message: 'error',
