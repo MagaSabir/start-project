@@ -77,13 +77,13 @@ videosRoutes.post('/', (req: Request, res: Response) => {
     }
 const date = new Date()
         const newVideo: any  = {
-            id: Date.now() + Math.random(),
+            id: Math.floor(Date.now() + Math.random()),
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
             minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date(date.setDate(date.getDate() + 1)),
+            publicationDate: new Date(date.setDate(date.getDate() + 1).toString()),
             availableResolutions: req.body.availableResolutions
         }
 
@@ -110,6 +110,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'title'
         })
+        return;
     }
 
     if(!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
@@ -117,6 +118,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'author'
         })
+        return;
     }
 
     if (!req.body.availableResolutions.every((res: any) => arr.includes(res)) || !req.body.availableResolutions.length) {
@@ -124,6 +126,7 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'availableResolutions'
         })
+        return;
     }
 
     if(typeof req.body.canBeDownloaded !== "boolean" ) {
@@ -131,13 +134,16 @@ videosRoutes.put('/:id', ( req:Request,res:Response)=> {
             message: 'error',
             field: 'canBeDownloaded'
         })
+        return;
     }
-
-    // if(req.body.minAgeRestriction < 1) {
-    //     errors.errorsMessages[0].message = 'error'
-    //     errors.errorsMessages[0].field = 'minAgeRestriction'
-    //     res.send(errors)
-    // }
+// || req.body.minAgeRestriction < 1
+    if(!req.body.minAgeRestriction || req.body.minAgeRestriction > 19 ) {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'minAgeRestriction'
+        })
+        return;
+    }
     // if(req.body.minAgeRestriction > 19) {
     //     errors.errorsMessages[0].message = 'error'
     //     errors.errorsMessages[0].field = 'minAgeRestriction'

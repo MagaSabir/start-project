@@ -72,13 +72,13 @@ exports.videosRoutes.post('/', (req, res) => {
     }
     const date = new Date();
     const newVideo = {
-        id: +new Date(),
+        id: Math.floor(Date.now() + Math.random()),
         title: req.body.title,
         author: req.body.author,
         canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date().toISOString(),
-        publicationDate: new Date(date.setDate(date.getDate() + 1)),
+        publicationDate: new Date(date.setDate(date.getDate() + 1).toString()),
         availableResolutions: req.body.availableResolutions
     };
     db_1.db.videos.push(newVideo);
@@ -100,30 +100,37 @@ exports.videosRoutes.put('/:id', (req, res) => {
             message: 'error',
             field: 'title'
         });
+        return;
     }
     if (!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'author'
         });
+        return;
     }
     if (!req.body.availableResolutions.every((res) => db_1.arr.includes(res)) || !req.body.availableResolutions.length) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'availableResolutions'
         });
+        return;
     }
     if (typeof req.body.canBeDownloaded !== "boolean") {
         errors.errorsMessages.push({
             message: 'error',
             field: 'canBeDownloaded'
         });
+        return;
     }
-    // if(req.body.minAgeRestriction < 1) {
-    //     errors.errorsMessages[0].message = 'error'
-    //     errors.errorsMessages[0].field = 'minAgeRestriction'
-    //     res.send(errors)
-    // }
+    // || req.body.minAgeRestriction < 1
+    if (!req.body.minAgeRestriction || req.body.minAgeRestriction > 19) {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'minAgeRestriction'
+        });
+        return;
+    }
     // if(req.body.minAgeRestriction > 19) {
     //     errors.errorsMessages[0].message = 'error'
     //     errors.errorsMessages[0].field = 'minAgeRestriction'
