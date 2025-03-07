@@ -26,6 +26,7 @@ exports.videosRoutes.post('/', (req, res) => {
             message: 'error',
             field: 'title'
         });
+        return;
     }
     if (!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
         errors.errorsMessages.push({
@@ -33,21 +34,12 @@ exports.videosRoutes.post('/', (req, res) => {
             field: 'author'
         });
     }
-    // if(req.body.minAgeRestriction < 1) {
-    //     errors.errorsMessages[0].message = 'error'
-    //     errors.errorsMessages[0].field = 'minAgeRestriction'
-    //     res.send(errors)
-    // }
-    // if(req.body.minAgeRestriction > 19) {
-    //     errors.errorsMessages[0].message = 'error'
-    //     errors.errorsMessages[0].field = 'minAgeRestriction'
-    //     res.send(errors)
-    // }
-    // if(typeof req.body.canBeDownloaded !== "boolean" ) {
-    //     errors.errorsMessages[0].message = 'error'
-    //     errors.errorsMessages[0].field = 'canBeDownloaded'
-    //     res.send(errors)
-    // }
+    if (!req.body.publicationDate || typeof req.body.publicationDate !== "string") {
+        errors.errorsMessages.push({
+            message: 'error',
+            field: 'publicationDate'
+        });
+    }
     if (!Array.isArray(req.body.availableResolutions)) {
         errors.errorsMessages.push({
             message: 'error',
