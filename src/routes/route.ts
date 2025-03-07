@@ -77,7 +77,7 @@ videosRoutes.post('/', (req: Request, res: Response) => {
     }
 const date = new Date()
         const newVideo: any  = {
-            id: +new Date(),
+            id: Date.now() + Math.random(),
             title: req.body.title,
             author: req.body.author,
             canBeDownloaded: false,
