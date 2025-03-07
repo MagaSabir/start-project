@@ -26,9 +26,6 @@ exports.videosRoutes.post('/', (req, res) => {
             message: 'error',
             field: 'title'
         });
-        // errors.errorsMessages[0].message = 'error'
-        // errors.errorsMessages[0].field = 'title'
-        // res.send(errors)
     }
     if (!req.body.author || typeof req.body.author !== "string" || req.body.author.trim().length > 20 || req.body.author.trim().length < 1) {
         errors.errorsMessages.push({
@@ -56,14 +53,12 @@ exports.videosRoutes.post('/', (req, res) => {
             message: 'error',
             field: 'availableResolutions'
         });
-        // res.send(errors)
     }
     if (!req.body.availableResolutions.every((res) => db_1.arr.includes(res)) || !req.body.availableResolutions.length) {
         errors.errorsMessages.push({
             message: 'error',
             field: 'availableResolutions'
         });
-        //res.status(400).send(errors);
     }
     if (errors.errorsMessages.length) {
         console.log('Validation errors:', errors);
@@ -72,7 +67,7 @@ exports.videosRoutes.post('/', (req, res) => {
     }
     const date = new Date();
     const newVideo = {
-        id: Math.floor(Date.now() + Math.random()),
+        id: Date.now() + Math.random(),
         title: req.body.title,
         author: req.body.author,
         canBeDownloaded: false,
@@ -131,11 +126,6 @@ exports.videosRoutes.put('/:id', (req, res) => {
         });
         return;
     }
-    // if(req.body.minAgeRestriction > 19) {
-    //     errors.errorsMessages[0].message = 'error'
-    //     errors.errorsMessages[0].field = 'minAgeRestriction'
-    //     res.send(errors)
-    // }
     if (errors.errorsMessages.length) {
         console.log('Validation errors:', errors);
         res.status(400).send(errors);
